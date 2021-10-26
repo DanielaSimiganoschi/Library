@@ -13,11 +13,13 @@ public class Genre  implements Serializable {
     private Long id;
     private String name;
 
+    @Column(name ="BOOK_ID")
+    private Long book_id;
 
-    @ManyToOne
-    @JoinColumn(name="BOOK_ID")
-    private Book book;
 
+//    @ManyToOne
+//    @JoinColumn(name="BOOK_ID")
+  //  private Book book;
 
     public Genre(){
 
@@ -25,6 +27,14 @@ public class Genre  implements Serializable {
 
     public Genre(String name) {
         this.name = name;
+    }
+
+    public Long getBook_id() {
+        return book_id;
+    }
+
+    public void setBook_id(Long book_id) {
+        this.book_id = book_id;
     }
 
     public String getName() {
@@ -35,13 +45,13 @@ public class Genre  implements Serializable {
         this.name = name;
     }
 
-    public Book getBook() {
-        return book;
-    }
-
-    public void setBook(Book book) {
-        this.book = book;
-    }
+//    public Book getBook() {
+//        return book;
+//    }
+//
+//    public void setBook(Book book) {
+//        this.book = book;
+//    }
     public Long getId() {
         return id;
     }

@@ -18,11 +18,11 @@ public class Book implements Serializable {
     private Date publishedDate;
     private int quantity;
 
-    @OneToMany(cascade=CascadeType.ALL, mappedBy="book")
-    @Column(name="BOOK_ID", nullable = false)
-    private List<Genre> genres;
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name="BOOK_ID")
+    private List<Genre> genres = new ArrayList<>();
 
-    @ManyToOne
+   @ManyToOne
     private Author author;
 
     @OneToMany(mappedBy = "book")
@@ -75,14 +75,18 @@ public class Book implements Serializable {
     }
 
     public void setGenres(List<Genre> genres) {
+
+        for (Genre genre: genres){
+            genre.setBook_id(this.getId());
+        }
         this.genres = genres;
     }
-
-    public void addGenre(Genre genre){
-        if(genres == null) genres = new ArrayList<>();
-        genre.setBook(this);
-        genres.add(genre);
-    }
+//
+//    public void addGenre(Genre genre){
+//        if(genres == null) genres = new ArrayList<>();
+//        genre.setBook(this);
+//        genres.add(genre);
+//    }
 
     public Author getAuthor() {
         return author;
