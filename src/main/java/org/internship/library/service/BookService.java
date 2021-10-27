@@ -26,7 +26,7 @@ public class BookService {
     @Autowired
     public BookService(BookRepository bookRepo, GenreRepository genreRepository, AuthorRepository authorRepo, ISBNRepository isbnRepo, GenreRepository genreRepo) {
         this.bookRepo = bookRepo;
-        ISBNRepo = isbnRepo;
+        this.ISBNRepo = isbnRepo;
         this.genreRepo = genreRepo;
     }
 

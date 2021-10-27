@@ -25,7 +25,8 @@ public class Book implements Serializable {
    @ManyToOne
     private Author author;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name="BOOK_ID")
     private List<ISBN> ISBNs = new ArrayList<>();
 
     public Book(){
@@ -81,12 +82,10 @@ public class Book implements Serializable {
         }
         this.genres = genres;
     }
-//
-//    public void addGenre(Genre genre){
-//        if(genres == null) genres = new ArrayList<>();
-//        genre.setBook(this);
-//        genres.add(genre);
-//    }
+
+    public void setISBNs(List<ISBN> ISBNs) {
+        this.ISBNs = ISBNs;
+    }
 
     public Author getAuthor() {
         return author;

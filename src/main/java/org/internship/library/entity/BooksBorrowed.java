@@ -17,8 +17,8 @@ public class BooksBorrowed implements Serializable {
     private boolean returnedOnTime;
     private boolean returned;
 
-    @ManyToOne
-    private Patron patron;
+    @Column(name ="PATRON_ID")
+    private Long patron_id;
 
     public BooksBorrowed(){
 
@@ -72,12 +72,12 @@ public class BooksBorrowed implements Serializable {
         this.returned = returned;
     }
 
-    public Patron getPatron() {
-        return patron;
+    public Long getPatron_id() {
+        return patron_id;
     }
 
-    public void setPatron(Patron patron) {
-        this.patron = patron;
+    public void setPatron_id(Long patron_id) {
+        this.patron_id = patron_id;
     }
 
     public Long getId() {

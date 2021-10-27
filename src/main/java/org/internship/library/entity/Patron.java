@@ -20,7 +20,8 @@ public class Patron implements Serializable {
     private int score;
     private int nrBooksAllowed;
 
-    @OneToMany(mappedBy = "patron")
+    @OneToMany(cascade=CascadeType.ALL)
+    @JoinColumn(name="PATRON_ID")
     private List<BooksBorrowed> books = new ArrayList<>();
 
     public Patron(){

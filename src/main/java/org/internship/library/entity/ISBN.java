@@ -12,9 +12,8 @@ public class ISBN implements Serializable {
     private String ISBN;
     private boolean borrowed;
 
-    @ManyToOne
-    @JoinColumn(name="book_id", nullable=false)
-    private Book book;
+    @Column(name ="BOOK_ID")
+    private Long book_id;
 
     public ISBN(){
 
@@ -41,11 +40,11 @@ public class ISBN implements Serializable {
         this.borrowed = borrowed;
     }
 
-    public Book getBook() {
-        return book;
+    public Long getBook_id() {
+        return book_id;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setBook_id(Long book_id) {
+        this.book_id = book_id;
     }
 }

@@ -31,14 +31,27 @@ public class BookController {
 
     @PostMapping("/add")
     public ResponseEntity<Book> addBook(@RequestBody Book book){
-
-        Genre genre1 = new Genre("genre 1");
-        Genre genre2 = new Genre("genre 2");
-        List<Genre> listGenres = Arrays.asList(genre1,genre2);
-        Book newBook = new Book("title 1", null, 1);
-        newBook.setGenres(listGenres);
-        Book newBook2 = bookService.addBook(newBook);
-        return new ResponseEntity<>(newBook2, HttpStatus.CREATED);
+        Book newBook = bookService.addBook(book);
+        return new ResponseEntity<>(newBook, HttpStatus.CREATED);
     }
+
+    @GetMapping("/find/{id}")
+    public ResponseEntity<Book> getBookById(@PathVariable("id") Long id){
+        Book book = bookService.findABookById(id);
+        return new ResponseEntity<>(book, HttpStatus.OK);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<Book> updateBook(@RequestBody Book book){
+        Book updateBook = bookService.updateBook(book);
+        return new ResponseEntity<>(updateBook, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<?> deleteBookById(@PathVariable("id") Long id){
+        bookService.deleteABook(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 }
