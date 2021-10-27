@@ -17,10 +17,6 @@ public class Genre  implements Serializable {
     private Long book_id;
 
 
-//    @ManyToOne
-//    @JoinColumn(name="BOOK_ID")
-  //  private Book book;
-
     public Genre(){
 
     }
@@ -45,14 +41,7 @@ public class Genre  implements Serializable {
         this.name = name;
     }
 
-//    public Book getBook() {
-//        return book;
-//    }
-//
-//    public void setBook(Book book) {
-//        this.book = book;
-//    }
-    public Long getId() {
-        return id;
-    }
+    public Long getId() {return id;}
+
+
 }

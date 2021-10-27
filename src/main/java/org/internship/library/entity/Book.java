@@ -36,6 +36,7 @@ public class Book implements Serializable {
         this.title = title;
         this.publishedDate = publishedDate;
         this.quantity = quantity;
+
     }
 
     public String getTitle() {
@@ -99,4 +100,6 @@ public class Book implements Serializable {
     public Long getId() {
         return id;
     }
+
+
 }

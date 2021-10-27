@@ -35,7 +35,11 @@ public class BookService {
         Book newBook = bookRepo.save(book);
         return newBook;
     }
-
+    public void addGenre(List<Genre> genres){
+        for (Genre genre:genres) {
+            genreRepo.save(genre);
+        }
+    }
 
     public List<Book> findAllBooks(){
         return bookRepo.findAll();

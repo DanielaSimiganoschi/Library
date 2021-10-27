@@ -17,7 +17,8 @@ import java.util.List;
 @RequestMapping("/library/books")
 public class BookController {
 
-  private final BookService bookService;
+    private final BookService bookService;
+
 
     public BookController(BookService bookService) {
         this.bookService = bookService;
@@ -31,13 +32,19 @@ public class BookController {
 
     @PostMapping("/add")
     public ResponseEntity<Book> addBook(@RequestBody Book book){
+        List<Genre> listGenres = new ArrayList<Genre>();
+        for (Genre genre: book.getGenres()) {
+            listGenres.add(genre);
+        }
+        Book newBook = new Book(book.getTitle(), book.getPublishedDate(), book.getQuantity());
+        newBook.setAuthor(book.getAuthor());
+        //newBook.setGenres(listGenres);
 
-        Genre genre1 = new Genre("genre 1");
-        Genre genre2 = new Genre("genre 2");
-        List<Genre> listGenres = Arrays.asList(genre1,genre2);
-        Book newBook = new Book("title 1", null, 1);
-        newBook.setGenres(listGenres);
         Book newBook2 = bookService.addBook(newBook);
+        for (Genre genre: listGenres) {
+            genre.setBook_id(newBook2.getId());
+        }
+        bookService.addGenre(listGenres);
         return new ResponseEntity<>(newBook2, HttpStatus.CREATED);
     }
 
