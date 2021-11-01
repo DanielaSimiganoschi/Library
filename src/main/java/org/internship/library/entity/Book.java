@@ -12,31 +12,38 @@ public class Book implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false, name="ID")
+    @Column(nullable = false, updatable = false, name = "ID")
     private Long id;
     private String title;
     private Date publishedDate;
     private int quantity;
+    private String description;
 
-    @OneToMany(cascade=CascadeType.ALL)
-    @JoinColumn(name="BOOK_ID")
+    @ManyToMany(cascade = {
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "Books_Genres",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
     private List<Genre> genres = new ArrayList<>();
 
-   @ManyToOne
+    @ManyToOne
     private Author author;
 
-    @OneToMany(cascade=CascadeType.ALL)
-    @JoinColumn(name="BOOK_ID")
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "BOOK_ID")
     private List<ISBN> ISBNs = new ArrayList<>();
 
-    public Book(){
+    public Book() {
 
     }
 
-    public Book(String title, Date publishedDate, int quantity) {
+    public Book(String title, Date publishedDate, int quantity, String description) {
         this.title = title;
         this.publishedDate = publishedDate;
         this.quantity = quantity;
+        this.description = description;
     }
 
     public String getTitle() {
@@ -46,6 +53,7 @@ public class Book implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
+
 
     public Date getPublishedDate() {
         return publishedDate;
@@ -67,21 +75,14 @@ public class Book implements Serializable {
         return Collections.unmodifiableList(ISBNs);
     }
 
-    public void addISBN(ISBN code){
+    public void addISBN(ISBN code) {
         ISBNs.add(code);
     }
 
     public List<Genre> getGenres() {
-        return genres ;
+        return genres;
     }
 
-    public void setGenres(List<Genre> genres) {
-
-        for (Genre genre: genres){
-            genre.setBook_id(this.getId());
-        }
-        this.genres = genres;
-    }
 
     public void setISBNs(List<ISBN> ISBNs) {
         this.ISBNs = ISBNs;
@@ -97,5 +98,13 @@ public class Book implements Serializable {
 
     public Long getId() {
         return id;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

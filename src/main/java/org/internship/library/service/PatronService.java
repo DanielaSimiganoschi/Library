@@ -9,6 +9,8 @@ import org.internship.library.repository.PatronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -23,6 +25,7 @@ public class PatronService {
         this.booksBorrowedRepo = booksBorrowedRepo;
     }
 
+
     public Patron addPatron(Patron patron){
         return patronRepo.save(patron);
     }
@@ -36,6 +39,7 @@ public class PatronService {
     }
 
     public void deleteAPatron(Long id){
+        deleteBooksBorrowedForPatronId(id);
         patronRepo.deletePatronById(id);
     }
 
@@ -43,20 +47,24 @@ public class PatronService {
         return patronRepo.findPatronById(id).orElseThrow(() -> new UserNotFoundException("Patron by id "+ id + " was not found"));
     }
 
-    public BooksBorrowed addBookBorrowedForPatron(BooksBorrowed bookBorrowed){
-        return booksBorrowedRepo.save(bookBorrowed);
-    }
-
-    public BooksBorrowed updateBookBorrowedForPatron(BooksBorrowed bookBorrowed){
-        return booksBorrowedRepo.save(bookBorrowed);
-    }
-
-    public void deleteABookBorrowedForPatron(Long id){
-        booksBorrowedRepo.deleteById(id);
-    }
 
 
     public List<BooksBorrowed> findAllBooksBorrowedForPatronId(Long id){
         return booksBorrowedRepo.findBooksBorrowedForPatron(id).orElseThrow(() -> new UserNotFoundException("Books borrowed by Patron id "+ id + " were not found"));
     }
+
+    public List<BooksBorrowed> findBooksNotReturnedForPatronId(Long id){
+        return booksBorrowedRepo.findBooksBorrowedForPatronNotReturned(id).orElseThrow(() -> new UserNotFoundException("Patron id "+ id + " Returned all books"));
+    }
+
+    public List<BooksBorrowed> findBooksReturnedOnTimeForPatronId(Long id){
+        return booksBorrowedRepo.findBooksBorrowedForPatronReturnedOnTime(id).orElseThrow(() -> new UserNotFoundException("Patron id "+ id + " Returned all books"));
+    }
+
+
+    public void deleteBooksBorrowedForPatronId(Long id){
+        booksBorrowedRepo.deleteBooksBorrowedForPatron(id);
+    }
+
+
 }

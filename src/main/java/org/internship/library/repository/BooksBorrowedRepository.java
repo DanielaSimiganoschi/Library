@@ -12,6 +12,16 @@ import java.util.Optional;
 
 public interface BooksBorrowedRepository  extends JpaRepository<BooksBorrowed, Long> {
 
-    @Query(value ="SELECT b FROM BOOKS_BORROWED b where b.book_id = ?1",nativeQuery = true)
+    @Query(value ="SELECT * FROM BOOKS_BORROWED where PATRON_ID = ?1",nativeQuery = true)
     Optional<List<BooksBorrowed>> findBooksBorrowedForPatron(Long id);
+
+    @Query(value ="SELECT * FROM BOOKS_BORROWED where RETURNED = 0 and PATRON_ID = ?1",nativeQuery = true)
+    Optional<List<BooksBorrowed>> findBooksBorrowedForPatronNotReturned(Long id);
+
+    @Query(value ="SELECT * FROM BOOKS_BORROWED where RETURNED_ON_TIME = 1 and PATRON_ID = ?1",nativeQuery = true)
+    Optional<List<BooksBorrowed>> findBooksBorrowedForPatronReturnedOnTime(Long id);
+
+    @Query(value ="DELETE * FROM BOOKS_BORROWED where PATRON_ID = ?1",nativeQuery = true)
+    void deleteBooksBorrowedForPatron(Long id);
+
 }

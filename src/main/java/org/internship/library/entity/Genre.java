@@ -3,6 +3,8 @@ package org.internship.library.entity;
 import javax.persistence.*;
 import javax.persistence.criteria.Fetch;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Genre  implements Serializable {
@@ -13,23 +15,23 @@ public class Genre  implements Serializable {
     private Long id;
     private String name;
 
-    @Column(name ="BOOK_ID")
-    private Long book_id;
+    @ManyToMany(mappedBy = "genres")
+    private List<Book> books = new ArrayList<>();
 
     public Genre(){
 
     }
 
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
     public Genre(String name) {
         this.name = name;
-    }
-
-    public Long getBook_id() {
-        return book_id;
-    }
-
-    public void setBook_id(Long book_id) {
-        this.book_id = book_id;
     }
 
     public String getName() {

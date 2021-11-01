@@ -9,9 +9,8 @@ public class BooksBorrowed implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Long id;
-    private Long ISBN;
+    private String isbn;
     private Date dateBorrowed;
     private Date toBeReturned;
     private boolean returnedOnTime;
@@ -24,20 +23,20 @@ public class BooksBorrowed implements Serializable {
 
     }
 
-    public BooksBorrowed(Long ISBN, Date dateBorrowed, Date toBeReturned, boolean returnedOnTime, boolean returned) {
-        this.ISBN = ISBN;
+    public BooksBorrowed(String ISBN, Date dateBorrowed, Date toBeReturned, boolean returnedOnTime, boolean returned) {
+        this.isbn = ISBN;
         this.dateBorrowed = dateBorrowed;
         this.toBeReturned = toBeReturned;
         this.returnedOnTime = returnedOnTime;
         this.returned = returned;
     }
 
-    public Long getISBN() {
-        return ISBN;
+    public String getISBN() {
+        return isbn;
     }
 
-    public void setISBN(Long ISBN) {
-        this.ISBN = ISBN;
+    public void setISBN(String ISBN) {
+        this.isbn = ISBN;
     }
 
     public Date getDateBorrowed() {
@@ -56,7 +55,7 @@ public class BooksBorrowed implements Serializable {
         this.toBeReturned = toBeReturned;
     }
 
-    public boolean isReturnedOnTime() {
+    public boolean getReturnedOnTime() {
         return returnedOnTime;
     }
 

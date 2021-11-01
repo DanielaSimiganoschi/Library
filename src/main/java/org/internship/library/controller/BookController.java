@@ -9,12 +9,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @RequestMapping("/library/books")
+@Transactional
 public class BookController {
 
   private final BookService bookService;
@@ -53,5 +55,16 @@ public class BookController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/filterByGenre/{id}")
+    public ResponseEntity<List<Book>> filterBooksByGenre(@PathVariable("id") Long id){
+        List<Book> books = bookService.findBooksByGenre(id);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
+
+    @GetMapping("/filterByAuthor/{id}")
+    public ResponseEntity<List<Book>> filterBooksByAuthor(@PathVariable("id") Long id){
+        List<Book> books = bookService.findBooksByAuthor(id);
+        return new ResponseEntity<>(books, HttpStatus.OK);
+    }
 
 }
