@@ -8,6 +8,7 @@ import org.internship.library.repository.PatronRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class BooksBorrowedService {
 
     private final BooksBorrowedRepository booksBorrowedRepository;
@@ -46,6 +48,7 @@ public class BooksBorrowedService {
         Patron patron = patronService.findAPatronById(bookBorrowed.getPatron_id());
         Date date = new Date();
         if(bookBorrowed.isReturned() && date.before(bookBorrowed.getToBeReturned())) {
+            bookBorrowed.setReturnedOnTime(true);
             patron.setScore(patron.getScore() + 1);
             if (patron.getScore() % 3 == 0 && patron.getScore() != 0) {
                 patron.setNrBooksAllowed(patron.getNrBooksAllowed() + 1);
@@ -54,6 +57,7 @@ public class BooksBorrowedService {
         } else if(bookBorrowed.isReturned()){
             patron.setScore(patron.getScore() - 1);
         }
+
         patronService.updatePatron(patron);
         return booksBorrowedRepository.save(bookBorrowed);
     }
