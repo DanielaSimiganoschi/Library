@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-public class Author{
+public class Author  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
