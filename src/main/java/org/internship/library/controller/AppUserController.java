@@ -26,6 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping("library")
+@CrossOrigin("http://localhost:4200")
 public class AppUserController {
 
     private final AppUserService appUserService;
@@ -34,7 +35,7 @@ public class AppUserController {
         this.appUserService = appUserService;
     }
 
-    @GetMapping("/users")
+    @GetMapping("/users/all")
     public ResponseEntity<List<AppUser>> getAppUsers(){
         return ResponseEntity.ok().body(appUserService.getUsers());
     }
@@ -45,7 +46,7 @@ public class AppUserController {
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
 
-    @PostMapping("/role/add")
+    @PostMapping("/roles/add")
     public ResponseEntity<Role> addUser(@RequestBody Role role){
         Role newRole = appUserService.saveRole(role);
         return new ResponseEntity<>(newRole, HttpStatus.CREATED);

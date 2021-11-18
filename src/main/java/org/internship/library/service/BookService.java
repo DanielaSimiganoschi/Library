@@ -32,9 +32,9 @@ public class BookService {
         for (ISBN isbn : isbns
         ) {
             isbn.setBorrowed(false);
-
+            isbn.setBook(book);
         }
-        book.setISBNs(isbns);
+
         Book newBook = bookRepo.save(book);
         return newBook;
     }

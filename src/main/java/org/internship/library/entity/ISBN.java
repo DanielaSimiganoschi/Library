@@ -1,5 +1,10 @@
 package org.internship.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -12,16 +17,27 @@ public class ISBN implements Serializable {
     private String ISBN;
     private boolean borrowed;
 
-    @Column(name ="BOOK_ID")
-    private Long book_id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book_id", nullable = true)
+    private Book book;
 
     public ISBN(){
 
     }
 
-    public ISBN(String ISBN, boolean borrowed) {
+    public ISBN(String ISBN, boolean borrowed, Book book) {
         this.ISBN = ISBN;
         this.borrowed = borrowed;
+        this.book = book;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getISBN() {
@@ -40,11 +56,11 @@ public class ISBN implements Serializable {
         this.borrowed = borrowed;
     }
 
-    public Long getBook_id() {
-        return book_id;
+    public Book getBook() {
+        return book;
     }
 
-    public void setBook_id(Long book_id) {
-        this.book_id = book_id;
+    public void setBook(Book book) {
+        this.book = book;
     }
 }

@@ -1,5 +1,8 @@
 package org.internship.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,7 +23,7 @@ public class Patron implements Serializable {
     private int score;
     private int nrBooksAllowed;
 
-    @OneToMany(cascade=CascadeType.ALL)
+    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name="PATRON_ID")
     private List<BooksBorrowed> books = new ArrayList<>();
 

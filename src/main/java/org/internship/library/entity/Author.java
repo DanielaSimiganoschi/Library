@@ -1,5 +1,9 @@
 package org.internship.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +19,7 @@ public class Author  implements Serializable {
     private String firstName;
     private String lastName;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "author")
     private List<Book> books = new ArrayList<>();
 

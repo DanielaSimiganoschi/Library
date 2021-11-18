@@ -4,6 +4,7 @@ import org.internship.library.filter.CustomAuthenticationFilter;
 import org.internship.library.filter.CustomAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -39,10 +40,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         CustomAuthenticationFilter customAuthenticationFilter=new CustomAuthenticationFilter(authenticationManagerBean());
         customAuthenticationFilter.setFilterProcessesUrl("/library/login");
         http.csrf().disable();
+        http.cors();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/login/**","/library/token/refresh/**").permitAll();
+        http.authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+
+        http.authorizeRequests().antMatchers("/library/login/**","/library/token/refresh/**").permitAll();
+        http.authorizeRequests().antMatchers("/library/users/add/**").permitAll();
         http.authorizeRequests().antMatchers(GET,"/users/add/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(POST,"/users/role/add/**").hasAnyAuthority("ROLE_MANAGER");
+        http.authorizeRequests().antMatchers("/library/genre/**").permitAll();
+        http.authorizeRequests().antMatchers("/library/books/**").permitAll();
+        http.authorizeRequests().antMatchers("/library/patrons/**").permitAll();
+
+   //     http.authorizeRequests().antMatchers(POST,"/library/users/add/**").hasAnyAuthority("ROLE_MANAGER");
         http.authorizeRequests().anyRequest().permitAll();
         http.addFilter(customAuthenticationFilter);
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

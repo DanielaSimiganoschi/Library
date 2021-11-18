@@ -1,5 +1,9 @@
 package org.internship.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import javax.persistence.criteria.Fetch;
 import java.io.Serializable;
@@ -15,6 +19,8 @@ public class Genre  implements Serializable {
     private Long id;
     private String name;
 
+
+    @JsonIgnore
     @ManyToMany(mappedBy = "genres")
     private List<Book> books = new ArrayList<>();
 

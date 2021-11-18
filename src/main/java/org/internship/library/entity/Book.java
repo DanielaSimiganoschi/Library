@@ -1,5 +1,9 @@
 package org.internship.library.entity;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -8,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id", scope=Book.class)
 public class Book implements Serializable {
 
     @Id
@@ -15,7 +20,7 @@ public class Book implements Serializable {
     @Column(nullable = false, updatable = false, name = "ID")
     private Long id;
     private String title;
-    private Date publishedDate;
+    private String publishedDate;
     private int quantity;
     private String description;
 
@@ -31,15 +36,16 @@ public class Book implements Serializable {
     @ManyToOne
     private Author author;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "BOOK_ID")
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "book")
     private List<ISBN> ISBNs = new ArrayList<>();
 
     public Book() {
 
     }
 
-    public Book(String title, Date publishedDate, int quantity, String description) {
+    public Book(String title, String publishedDate, int quantity, String description) {
         this.title = title;
         this.publishedDate = publishedDate;
         this.quantity = quantity;
@@ -55,11 +61,11 @@ public class Book implements Serializable {
     }
 
 
-    public Date getPublishedDate() {
+    public String getPublishedDate() {
         return publishedDate;
     }
 
-    public void setPublishedDate(Date publishedDate) {
+    public void setPublishedDate(String publishedDate) {
         this.publishedDate = publishedDate;
     }
 
