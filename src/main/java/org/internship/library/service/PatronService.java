@@ -29,11 +29,20 @@ public class PatronService {
 
 
     public Patron addPatron(Patron patron){
+        patron.setNrBooksAllowed(3);
         return patronRepo.save(patron);
     }
 
     public List<Patron> findAllPatrons(){
         return patronRepo.findAll();
+    }
+
+    public List<Patron> findPatronsByFirstName(String firstName){
+        return patronRepo.findPatronByFirstName(firstName).orElseThrow(() -> new UserNotFoundException("Patrons with first name "+ firstName + " were not found"));
+    }
+
+    public List<Patron> findPatronsByLastName(String lastName){
+        return patronRepo.findPatronByLastName(lastName).orElseThrow(() -> new UserNotFoundException("Patrons with first name "+ lastName + " were not found"));
     }
 
     public Patron updatePatron(Patron patron){
@@ -48,8 +57,6 @@ public class PatronService {
     public Patron findAPatronById(Long id){
         return patronRepo.findPatronById(id).orElseThrow(() -> new UserNotFoundException("Patron by id "+ id + " was not found"));
     }
-
-
 
     public List<BooksBorrowed> findAllBooksBorrowedForPatronId(Long id){
         return booksBorrowedRepo.findBooksBorrowedForPatron(id).orElseThrow(() -> new UserNotFoundException("Books borrowed by Patron id "+ id + " were not found"));

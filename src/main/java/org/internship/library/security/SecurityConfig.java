@@ -44,12 +44,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll();
 
-        http.authorizeRequests().antMatchers("/library/login/**","/library/token/refresh/**").permitAll();
-        http.authorizeRequests().antMatchers("/library/users/add/**").permitAll();
-        http.authorizeRequests().antMatchers(GET,"/users/add/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers("/library/genre/**").permitAll();
-        http.authorizeRequests().antMatchers("/library/books/**").permitAll();
-        http.authorizeRequests().antMatchers("/library/patrons/**").permitAll();
+        http.authorizeRequests().antMatchers("/library/login/**","/library/token/refresh").permitAll();
+        http.authorizeRequests().antMatchers(GET,"/library/users/**").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/library/books/**").hasAnyAuthority("ROLE_ADMIN","ROLE_MANAGER","ROLE_USER");
+        http.authorizeRequests().antMatchers(GET,"/library/booksBorrowed/**").hasAnyAuthority("ROLE_USER","ROLE_MANAGER","ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/library/patrons/**").hasAnyAuthority("ROLE_MANAGER","ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/users/**").permitAll();
 
    //     http.authorizeRequests().antMatchers(POST,"/library/users/add/**").hasAnyAuthority("ROLE_MANAGER");
         http.authorizeRequests().anyRequest().permitAll();

@@ -36,13 +36,11 @@ public class Book implements Serializable {
     @ManyToOne
     private Author author;
 
-    @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            mappedBy = "book")
+    @OneToMany(cascade=CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name="BOOK_ID")
     private List<ISBN> ISBNs = new ArrayList<>();
 
     public Book() {
-
     }
 
     public Book(String title, String publishedDate, int quantity, String description) {
@@ -78,7 +76,7 @@ public class Book implements Serializable {
     }
 
     public List<ISBN> getISBNs() {
-        return Collections.unmodifiableList(ISBNs);
+        return ISBNs;
     }
 
     public void addISBN(ISBN code) {

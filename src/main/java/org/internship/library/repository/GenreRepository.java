@@ -12,4 +12,5 @@ public interface GenreRepository  extends JpaRepository<Genre, Long> {
     void deleteGenreById(Long id);
 
     Optional<Genre> findAGenreById(Long id);
+
 }

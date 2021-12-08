@@ -33,7 +33,7 @@ public class AuthorService {
     }
 
 
-    public void deleteAuthor(Long id){
+    public void deleteAuthorById(Long id){
         authorRepo.deleteAuthorById(id);
     }
 

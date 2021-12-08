@@ -7,8 +7,11 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.internship.library.entity.AppUser;
+import org.internship.library.entity.Author;
+import org.internship.library.entity.Book;
 import org.internship.library.entity.Role;
 import org.internship.library.service.AppUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,8 +30,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RestController
 @RequestMapping("library")
 @CrossOrigin("http://localhost:4200")
+
 public class AppUserController {
 
+    @Autowired
     private final AppUserService appUserService;
 
     public AppUserController(AppUserService appUserService) {
@@ -40,11 +45,47 @@ public class AppUserController {
         return ResponseEntity.ok().body(appUserService.getUsers());
     }
 
+    @GetMapping("/roles/all")
+    public ResponseEntity<List<Role>> getAllRoles(){
+        return ResponseEntity.ok().body(appUserService.getRoles());
+    }
+
+    @GetMapping("/users/find/{id}")
+    public ResponseEntity<AppUser> getUserById(@PathVariable("id") Long id){
+        AppUser user = appUserService.findUserById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/findByUsername/{username}")
+    public ResponseEntity<AppUser> getUserByUsername(@PathVariable("username") String username){
+        AppUser user = appUserService.findUserByUsername(username);
+        return new ResponseEntity<AppUser>(user, HttpStatus.OK);
+    }
+
+    @GetMapping("/users/findUsersByRole/{id}")
+    public ResponseEntity<List<AppUser>> getBooksByTitle(@PathVariable("id") Long id){
+        List<AppUser> users = appUserService.findUsersByRole(id);
+        return ResponseEntity.ok().body(users);
+    }
+
     @PostMapping("/users/add")
     public ResponseEntity<AppUser> addUser(@RequestBody AppUser appUser){
         AppUser newUser = appUserService.saveUser(appUser);
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/users/delete/{id}")
+    public ResponseEntity<?> deleteUserById(@PathVariable("id") Long id){
+        appUserService.deleteUserById(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping("/users/update")
+    public ResponseEntity<AppUser> updateUser(@RequestBody AppUser user){
+        AppUser updateUser = appUserService.updateUser(user);
+        return new ResponseEntity<>(updateUser, HttpStatus.OK);
+    }
+
 
     @PostMapping("/roles/add")
     public ResponseEntity<Role> addUser(@RequestBody Role role){
@@ -52,28 +93,23 @@ public class AppUserController {
         return new ResponseEntity<>(newRole, HttpStatus.CREATED);
     }
 
-    @PostMapping("/user/addRole")
-    public ResponseEntity<Role> addRoleToUser(@RequestBody RoleToUser form){
-        appUserService.addRoleToAppUser(form.getUsername(),form.getRoleName());
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
     @GetMapping("/token/refresh")
     public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
-                String refresh_token= authorizationHeader.substring("Bearer ".length());
+                String refresh_token = authorizationHeader.substring("Bearer ".length());
                 Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String username = decodedJWT.getSubject();
                 AppUser appUser = appUserService.getUser(username);
+                List<String> roles = Arrays.asList(appUser.getRole()).stream().map(role -> role.getName()).collect(Collectors.toList());
                 String access_token = JWT.create()
                         .withSubject(appUser.getUsername())
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10*60*1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 1*60*1000))
                         .withIssuer(request.getRequestURL().toString())
-                        .withClaim("roles",appUser.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                        .withClaim("roles",roles)
                         .sign(algorithm);
 
                 Map<String, String> tokens = new HashMap<>();
@@ -97,31 +133,3 @@ public class AppUserController {
 }
 }
 
-class RoleToUser{
-    private String username;
-    private String roleName;
-
-    public RoleToUser() {
-    }
-
-    public RoleToUser(String username, String roleName) {
-        this.username = username;
-        this.roleName = roleName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getRoleName() {
-        return roleName;
-    }
-
-    public void setRoleName(String roleName) {
-        this.roleName = roleName;
-    }
-}

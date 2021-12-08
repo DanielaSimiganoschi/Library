@@ -1,9 +1,6 @@
 package org.internship.library.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,10 +14,8 @@ public class ISBN implements Serializable {
     private String ISBN;
     private boolean borrowed;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id", nullable = true)
-    private Book book;
+    @Column(name ="BOOK_ID")
+    private Long book_id;
 
     public ISBN(){
 
@@ -29,7 +24,7 @@ public class ISBN implements Serializable {
     public ISBN(String ISBN, boolean borrowed, Book book) {
         this.ISBN = ISBN;
         this.borrowed = borrowed;
-        this.book = book;
+
     }
 
     public Long getId() {
@@ -56,11 +51,11 @@ public class ISBN implements Serializable {
         this.borrowed = borrowed;
     }
 
-    public Book getBook() {
-        return book;
+    public Long getBook_id() {
+        return book_id;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    public void setBook_id(Long book_id) {
+        this.book_id = book_id;
     }
 }

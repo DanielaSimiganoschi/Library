@@ -32,19 +32,34 @@ public class BookService {
         for (ISBN isbn : isbns
         ) {
             isbn.setBorrowed(false);
-            isbn.setBook(book);
+            isbn.setBook_id(book.getId());
         }
 
         Book newBook = bookRepo.save(book);
         return newBook;
     }
 
+    public List<Book> findBooksByTitle(String title) {
+
+        return bookRepo.findBooksByTitle(title).orElseThrow(() -> new UserNotFoundException("Book with title " + title + " was not found"));
+    }
 
     public List<Book> findAllBooks() {
         return bookRepo.findAll();
     }
 
     public Book updateBook(Book book) {
+        List<ISBN> isbns = book.getISBNs();
+        int count = 0;
+
+        for (ISBN isbn : isbns)
+        {
+            isbn.setBook_id(book.getId());
+            count++;
+            System.out.println(isbn.getISBN());
+        }
+        System.out.println(count);
+        book.setQuantity(count);
         return bookRepo.save(book);
     }
 
@@ -54,6 +69,26 @@ public class BookService {
 
     public Book findABookById(Long id) {
         return bookRepo.findBookById(id).orElseThrow(() -> new UserNotFoundException("Book by id " + id + " was not found"));
+    }
+
+    public Book findABookByTitle(String title) {
+        return bookRepo.findByTitle(title).orElseThrow(() -> new UserNotFoundException("Book with title " + title + " was not found"));
+    }
+
+   public ISBN updateISBNT(ISBN isbn){
+        isbn.setBorrowed(true);
+        return ISBNRepo.save(isbn);}
+
+    public ISBN updateISBNF(ISBN isbn){
+        isbn.setBorrowed(false);
+        return ISBNRepo.save(isbn);}
+
+    public List<ISBN> findISBNsForBookID(Long id){
+        return ISBNRepo.findISBNSForBookID(id).orElseThrow(() -> new UserNotFoundException("Book by id " + id + " was not found"));
+    }
+
+    public ISBN findISBNByISBN(String isbn){
+        return ISBNRepo.findISBNbyISBN(isbn).orElseThrow(() -> new UserNotFoundException("ISBN with ISBN code " + isbn + " was not found"));
     }
 
     public List<Book> findBooksByGenre(Long id) {
@@ -69,5 +104,4 @@ public class BookService {
     public List<Book> findBooksByAuthor(Long id) {
         return bookRepo.findBookByAuthor(id).orElseThrow(() -> new UserNotFoundException("Books with author ID " + id + " were not found"));
     }
-
 }

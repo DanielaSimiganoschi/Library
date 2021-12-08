@@ -1,7 +1,9 @@
 package org.internship.library.service;
 
 import org.internship.library.entity.AppUser;
+import org.internship.library.entity.Author;
 import org.internship.library.entity.Role;
+import org.internship.library.exception.UserNotFoundException;
 import org.internship.library.repository.AppUserRepository;
 import org.internship.library.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -46,10 +49,34 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
     }
 
     @Override
-    public void addRoleToAppUser(String username, String roleName) {
-        AppUser user = appUserRepository.findByUsername(username);
-        Role role = roleRepository.findByName(roleName);
-        user.getRoles().add(role);
+    public void deleteUserById(Long id){
+        appUserRepository.deleteUserById(id);
+    }
+
+    @Override
+    public AppUser updateUser(AppUser user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return appUserRepository.save(user);
+    }
+
+    @Override
+    public AppUser findUserById(Long id){
+        return appUserRepository.findUserById(id).orElseThrow(() -> new UserNotFoundException("Author by id "+ id + " was not found"));
+    }
+
+    @Override
+    public AppUser findUserByUsername(String username) {
+        return appUserRepository.findByUsername(username);
+    }
+
+    @Override
+    public List<AppUser> findUsersByRole(Long id) {
+        return appUserRepository.findUsersByRole(id);
+    }
+
+    @Override
+    public List<Role> getRoles() {
+        return roleRepository.findAll();
     }
 
     @Override
@@ -69,7 +96,7 @@ public class AppUserServiceImpl implements AppUserService, UserDetailsService {
             throw new UsernameNotFoundException("User not found in the database");
         }
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getName())) ;
         return new User(user.getUsername(), user.getPassword(), authorities);
     }
 }

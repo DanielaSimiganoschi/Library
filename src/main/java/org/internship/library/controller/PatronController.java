@@ -1,5 +1,6 @@
 package org.internship.library.controller;
 
+import org.internship.library.entity.Book;
 import org.internship.library.entity.BooksBorrowed;
 import org.internship.library.entity.Patron;
 import org.internship.library.service.BooksBorrowedService;
@@ -8,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/library/patrons")
@@ -76,6 +79,37 @@ public class PatronController {
     public ResponseEntity<List<BooksBorrowed>> getAllBooksNotReturned(@PathVariable("id") Long id) {
         List<BooksBorrowed> booksBorrowedNotReturnedByPatron = patronService.findBooksNotReturnedForPatronId(id);
         return new ResponseEntity<>(booksBorrowedNotReturnedByPatron, HttpStatus.OK);
+    }
+
+    @GetMapping("/searchByName")
+    public ResponseEntity<List<Patron>> searchPatron(@RequestParam(name ="firstName",required = false) String firstName, @RequestParam(name ="lastName", required = false) String lastName){
+        List<Patron> listFilteredByFirstName= new ArrayList<>();
+        List<Patron> listFilteredByLastName= new ArrayList<>();
+
+        List<Patron> intersect= new ArrayList<>();
+
+
+        if(firstName != null) {
+            listFilteredByFirstName = patronService.findPatronsByFirstName(firstName);
+        }
+        if(lastName != null) {
+            listFilteredByLastName = patronService.findPatronsByLastName(lastName);
+        }
+
+
+
+        if(firstName != null && lastName != null) {
+            intersect = listFilteredByFirstName.stream()
+                    .filter(listFilteredByLastName::contains)
+                    .collect(Collectors.toList());
+
+        }  else if(firstName != null){
+            intersect= listFilteredByFirstName;
+        }else if(lastName != null){
+            intersect= listFilteredByLastName;
+        }
+
+        return new ResponseEntity<>(intersect, HttpStatus.OK);
     }
 
 }
